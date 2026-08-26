@@ -1,0 +1,67 @@
+import type { Metadata } from "next";
+import RoiCalculator from "./roi-calculator";
+
+export const metadata: Metadata = {
+  title: "ROI Calculator – Calculate Return on Investment",
+  description:
+    "Free ROI calculator to measure return on investment. Calculate net profit, ROI percentage, ROI multiple, and annualized ROI.",
+  alternates: { canonical: "/roi-calculator" },
+  openGraph: {
+    title: "ROI Calculator – Calculate Return on Investment",
+    description:
+      "Calculate ROI instantly. Input investment and return to get net profit, ROI %, multiple, and annualized ROI.",
+    url: "https://biztoolkit-ashy.vercel.app/roi-calculator",
+    type: "website",
+  },
+};
+
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "ROI Calculator",
+  url: "https://biztoolkit-ashy.vercel.app/roi-calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  description:
+    "Calculate return on investment (ROI) with net profit, ROI %, multiple, and annualized ROI.",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do you calculate ROI?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "ROI = (Return - Investment) / Investment × 100. It shows the percentage return on an investment.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is annualized ROI?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Annualized ROI normalizes the return to a yearly rate, making it easier to compare investments of different durations.",
+      },
+    },
+  ],
+};
+
+export default function RoiCalculatorPage() {
+  return (
+    <main className="min-h-screen bg-gray-50 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <RoiCalculator />
+    </main>
+  );
+}
