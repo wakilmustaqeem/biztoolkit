@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 export default function ProfitMarginCalculator() {
@@ -19,7 +20,7 @@ export default function ProfitMarginCalculator() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12">
       <div className="mx-auto max-w-2xl">
-        <a href="/" className="text-sm font-semibold text-blue-600 hover:underline">← BizToolkit</a>
+        <Link href="/" className="text-sm font-semibold text-blue-600 hover:underline">← BizToolkit</Link>
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <h1 className="text-3xl font-bold text-slate-900">Profit Margin Calculator</h1>
           <p className="mt-2 text-slate-600">Enter your revenue and total costs to calculate profit and margin.</p>
