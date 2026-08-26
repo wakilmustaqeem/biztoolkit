@@ -1,72 +1,105 @@
-import Link from 'next/link';
+import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Free Business Calculators | BizToolkit",
+  description:
+    "Use free profit margin, ROI, break-even, markup, discount, and commission calculators designed for freelancers, entrepreneurs, and small businesses.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Free Business Calculators | BizToolkit",
+    description:
+      "Calculate profit margin, ROI, break-even point, markup, discounts, and commissions with free business tools from BizToolkit.",
+    url: "https://biztoolkit-ashy.vercel.app",
+    type: "website",
+  },
+};
+
+const calculators = [
+  {
+    href: "/profit-margin-calculator",
+    title: "Profit Margin Calculator",
+    description:
+      "Calculate net profit and profit margin from revenue and total costs.",
+  },
+  {
+    href: "/roi-calculator",
+    title: "ROI Calculator",
+    description:
+      "Measure return on investment, net profit, and annualized ROI.",
+  },
+  {
+    href: "/break-even-calculator",
+    title: "Break-even Calculator",
+    description:
+      "Find break-even units and revenue to cover fixed and variable costs.",
+  },
+  {
+    href: "/markup-calculator",
+    title: "Markup Calculator",
+    description:
+      "Determine selling price from cost and markup percentage, and see profit margin.",
+  },
+  {
+    href: "/discount-calculator",
+    title: "Discount Calculator",
+    description:
+      "Calculate discount amount, final price, and savings on any purchase.",
+  },
+  {
+    href: "/commission-calculator",
+    title: "Commission Calculator",
+    description:
+      "Compute commission amount and total earnings from a base amount.",
+  },
+];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-24">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">BizToolkit</p>
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+    <main className="min-h-screen bg-gray-50 py-10 px-4">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
           Free Business Tools for Freelancers & Small Businesses
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-          Simple, fast calculators and generators to help you make better business decisions.
+        <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
+          BizToolkit offers simple, free calculators to help you make smarter
+          business decisions. Quickly calculate profit margins, ROI,
+          break-even points, markups, discounts, and commissions without
+          complex spreadsheets.
         </p>
 
-        <div className="mx-auto mt-12 grid max-w-md gap-6 text-left sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/profit-margin-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">Profit Margin Calculator</h2>
-            <p className="mt-2 text-slate-600">Calculate gross profit and profit margin instantly.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          Free Business Calculators
+        </h2>
 
-          <Link
-            href="/roi-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">ROI Calculator</h2>
-            <p className="mt-2 text-slate-600">Calculate return on investment, net profit, and annualized ROI.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
-
-          <Link
-            href="/break-even-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">Break-even Calculator</h2>
-            <p className="mt-2 text-slate-600">Determine the units and revenue needed to cover costs and reach a target profit.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
-
-          <Link
-            href="/markup-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">Markup Calculator</h2>
-            <p className="mt-2 text-slate-600">Calculate selling price and understand the difference between markup and margin.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
-
-          <Link
-            href="/discount-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">Discount Calculator</h2>
-            <p className="mt-2 text-slate-600">Calculate discount amount, final price, and savings instantly.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
-
-          <Link
-            href="/commission-calculator"
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <h2 className="text-xl font-semibold text-slate-900">Commission Calculator</h2>
-            <p className="mt-2 text-slate-600">Calculate commission amount and total earnings instantly.</p>
-            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
-          </Link>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {calculators.map((calc) => (
+            <Link
+              key={calc.href}
+              href={calc.href}
+              className="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition border border-gray-200"
+            >
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                {calc.title}
+              </h3>
+              <p className="text-gray-600">{calc.description}</p>
+            </Link>
+          ))}
         </div>
+
+        <section className="mt-12 text-gray-700">
+          <h2 className="text-2xl font-semibold mb-4">
+            Why Use These Business Calculators?
+          </h2>
+          <p>
+            Whether you’re a freelancer setting your rates, an entrepreneur
+            evaluating a project, or a small business owner planning pricing,
+            these tools help you understand your numbers quickly. All
+            calculators are free, easy to use, and work on any device.
+          </p>
+        </section>
       </div>
     </main>
   );
