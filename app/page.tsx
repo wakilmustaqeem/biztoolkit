@@ -57,6 +57,15 @@ export default function Home() {
             <p className="mt-2 text-slate-600">Calculate discount amount, final price, and savings instantly.</p>
             <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
           </Link>
+
+          <Link
+            href="/commission-calculator"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+          >
+            <h2 className="text-xl font-semibold text-slate-900">Commission Calculator</h2>
+            <p className="mt-2 text-slate-600">Calculate commission amount and total earnings instantly.</p>
+            <span className="mt-5 inline-block font-semibold text-blue-600">Open calculator →</span>
+          </Link>
         </div>
       </div>
     </main>
