@@ -1,15 +1,27 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: 'BizToolkit — Free Business Tools',
-  description: 'Free, simple tools and calculators for freelancers and small businesses.',
+  title: {
+    default: "BizToolkit – Free Business Calculators",
+    template: "%s | BizToolkit",
+  },
+  description:
+    "Free business calculators for profit margin, ROI, break-even, markup, discount, commission, and VAT.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-gray-50 text-gray-900 antialiased">
+        <Header />
+        <main className="min-h-[calc(100vh-140px)]">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
