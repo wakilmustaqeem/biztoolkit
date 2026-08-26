@@ -13,20 +13,15 @@ export default function RoiCalculator() {
 
   const inv = parseFloat(investment);
   const ret = parseFloat(returnValue);
-  const years =
-    periodUnit === "years"
-      ? parseFloat(timePeriod)
-      : parseFloat(timePeriod) / 12;
+  const years = periodUnit === "years" ? parseFloat(timePeriod) : parseFloat(timePeriod) / 12;
 
   const isValid = !isNaN(inv) && inv > 0 && !isNaN(ret) && ret >= 0;
-
   const netProfit = isValid ? ret - inv : null;
   const roiPercent = isValid ? ((ret - inv) / inv) * 100 : null;
   const roiMultiple = isValid ? ret / inv : null;
-  const annualizedRoi =
-    isValid && !isNaN(years) && years > 0 && ret > 0
-      ? (Math.pow(ret / inv, 1 / years) - 1) * 100
-      : null;
+  const annualizedRoi = isValid && !isNaN(years) && years > 0 && ret > 0
+    ? (Math.pow(ret / inv, 1 / years) - 1) * 100
+    : null;
 
   const loadExample = () => {
     setInvestment("1000");
@@ -43,127 +38,153 @@ export default function RoiCalculator() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl p-4">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
-        <h1 className="mb-4 text-2xl font-bold text-gray-800">ROI Calculator</h1>
-
-        <div className="grid gap-4">
-          <div>
-            <label htmlFor="investment" className="mb-1 block text-sm font-medium text-gray-700">
-              Initial Investment ($)
-            </label>
-            <input
-              id="investment"
-              type="number"
-              inputMode="decimal"
-              min="0"
-              step="0.01"
-              value={investment}
-              onChange={(e) => setInvestment(e.target.value)}
-              placeholder="e.g. 1000"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+    <div className="min-h-[70vh] bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4 py-8 sm:px-6 lg:py-12">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 inline-flex rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-bold text-blue-700 shadow-sm">
+            BUSINESS TOOL • ROI
           </div>
-
-          <div>
-            <label htmlFor="return" className="mb-1 block text-sm font-medium text-gray-700">
-              Total Return / Final Value ($)
-            </label>
-            <input
-              id="return"
-              type="number"
-              inputMode="decimal"
-              min="0"
-              step="0.01"
-              value={returnValue}
-              onChange={(e) => setReturnValue(e.target.value)}
-              placeholder="e.g. 1500"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="time-period" className="mb-1 block text-sm font-medium text-gray-700">
-                Time Period (optional)
-              </label>
-              <input
-                id="time-period"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.01"
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value)}
-                placeholder="e.g. 2"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="period-unit" className="mb-1 block text-sm font-medium text-gray-700">
-                Unit
-              </label>
-              <select
-                id="period-unit"
-                value={periodUnit}
-                onChange={(e) => setPeriodUnit(e.target.value as "months" | "years")}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="years">Years</option>
-                <option value="months">Months</option>
-              </select>
-            </div>
-          </div>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">ROI Calculator</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">
+            Measure your return on investment with a clear, professional financial calculator.
+          </p>
         </div>
 
-        <div className="mt-6 flex gap-2">
-          <button
-            type="button"
-            onClick={loadExample}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-          >
-            Load Example
-          </button>
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 transition hover:bg-gray-300"
-          >
-            Reset
-          </button>
-        </div>
+        <div className="grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_70px_-28px_rgba(15,23,42,0.35)] lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-6 text-white sm:p-8 lg:p-10">
+            <div className="mb-8">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-300">Enter your numbers</p>
+              <h2 className="mt-2 text-2xl font-extrabold">Investment Details</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-300">Use your initial investment and final return to calculate your ROI.</p>
+            </div>
 
-        {isValid && (
-          <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <h2 className="mb-3 text-xl font-semibold text-gray-800">Results</h2>
-            <div className="space-y-2">
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-600">Net Profit</span>
-                <span className={`font-bold ${netProfit! >= 0 ? "text-green-700" : "text-red-700"}`}>
-                  ${formatNumber(netProfit!)}
-                </span>
+            <div className="space-y-5">
+              <div>
+                <label htmlFor="investment" className="mb-2 block text-sm font-bold text-slate-200">Initial Investment ($)</label>
+                <input
+                  id="investment"
+                  type="number"
+                  inputMode="decimal"
+                  min="0"
+                  step="0.01"
+                  value={investment}
+                  onChange={(e) => setInvestment(e.target.value)}
+                  placeholder="e.g. 1,000"
+                  className="h-16 w-full rounded-2xl border border-white/10 bg-white/10 px-5 text-xl font-bold text-white outline-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)] placeholder:text-slate-500 focus:border-blue-400 focus:bg-white/15 focus:ring-4 focus:ring-blue-500/20"
+                />
               </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-600">ROI (%)</span>
-                <span className={`font-bold ${roiPercent! >= 0 ? "text-blue-700" : "text-red-700"}`}>
-                  {formatNumber(roiPercent!)}%
-                </span>
+
+              <div>
+                <label htmlFor="return" className="mb-2 block text-sm font-bold text-slate-200">Total Return / Final Value ($)</label>
+                <input
+                  id="return"
+                  type="number"
+                  inputMode="decimal"
+                  min="0"
+                  step="0.01"
+                  value={returnValue}
+                  onChange={(e) => setReturnValue(e.target.value)}
+                  placeholder="e.g. 1,500"
+                  className="h-16 w-full rounded-2xl border border-white/10 bg-white/10 px-5 text-xl font-bold text-white outline-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)] placeholder:text-slate-500 focus:border-blue-400 focus:bg-white/15 focus:ring-4 focus:ring-blue-500/20"
+                />
               </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-600">ROI Multiple</span>
-                <span className="font-bold text-purple-700">{formatNumber(roiMultiple!)}x</span>
-              </div>
-              {annualizedRoi !== null && (
-                <div className="flex justify-between gap-4">
-                  <span className="text-gray-600">Annualized ROI</span>
-                  <span className={`font-bold ${annualizedRoi >= 0 ? "text-teal-700" : "text-red-700"}`}>
-                    {formatNumber(annualizedRoi)}%
-                  </span>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="time-period" className="mb-2 block text-sm font-bold text-slate-200">Time Period</label>
+                  <input
+                    id="time-period"
+                    type="number"
+                    inputMode="decimal"
+                    min="0"
+                    step="0.01"
+                    value={timePeriod}
+                    onChange={(e) => setTimePeriod(e.target.value)}
+                    placeholder="e.g. 2"
+                    className="h-16 w-full rounded-2xl border border-white/10 bg-white/10 px-5 text-lg font-bold text-white outline-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)] placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-500/20"
+                  />
                 </div>
-              )}
+                <div>
+                  <label htmlFor="period-unit" className="mb-2 block text-sm font-bold text-slate-200">Unit</label>
+                  <select
+                    id="period-unit"
+                    value={periodUnit}
+                    onChange={(e) => setPeriodUnit(e.target.value as "months" | "years")}
+                    className="h-16 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-lg font-bold text-white outline-none shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)] focus:border-blue-400 focus:ring-4 focus:ring-blue-500/20"
+                  >
+                    <option className="text-slate-900" value="years">Years</option>
+                    <option className="text-slate-900" value="months">Months</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-3">
+                <button type="button" onClick={loadExample} className="min-h-14 flex-1 rounded-2xl bg-blue-600 px-4 font-extrabold text-white shadow-[0_8px_0_#173f9e,0_14px_25px_rgba(37,99,235,0.25)] transition hover:-translate-y-0.5 hover:bg-blue-500 active:translate-y-1 active:shadow-[0_3px_0_#173f9e]">
+                  Load Example
+                </button>
+                <button type="button" onClick={reset} className="min-h-14 flex-1 rounded-2xl border border-white/20 bg-white/10 px-4 font-extrabold text-white shadow-[0_8px_0_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:bg-white/15 active:translate-y-1 active:shadow-[0_3px_0_rgba(0,0,0,0.2)]">
+                  Reset
+                </button>
+              </div>
             </div>
+          </section>
+
+          <section className="bg-gradient-to-br from-white via-blue-50/40 to-slate-50 p-6 sm:p-8 lg:p-10">
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-600">Your results</p>
+                <h2 className="mt-2 text-2xl font-extrabold text-slate-900">Investment Performance</h2>
+              </div>
+              <div className="rounded-2xl border border-blue-100 bg-white px-3 py-2 text-xs font-bold text-slate-500 shadow-sm">LIVE</div>
+            </div>
+
+            {isValid ? (
+              <div className="space-y-4">
+                <div className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-[0_12px_30px_-18px_rgba(16,185,129,0.5)]">
+                  <p className="text-sm font-bold text-slate-500">Net Profit</p>
+                  <p className={`mt-2 text-4xl font-black ${netProfit! >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    ${formatNumber(netProfit!)}
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-3xl border border-blue-100 bg-white p-5 shadow-[0_12px_30px_-18px_rgba(37,99,235,0.45)]">
+                    <p className="text-sm font-bold text-slate-500">ROI</p>
+                    <p className={`mt-2 text-3xl font-black ${roiPercent! >= 0 ? "text-blue-700" : "text-red-600"}`}>{formatNumber(roiPercent!)}%</p>
+                  </div>
+                  <div className="rounded-3xl border border-indigo-100 bg-white p-5 shadow-[0_12px_30px_-18px_rgba(79,70,229,0.4)]">
+                    <p className="text-sm font-bold text-slate-500">ROI Multiple</p>
+                    <p className="mt-2 text-3xl font-black text-indigo-700">{formatNumber(roiMultiple!)}x</p>
+                  </div>
+                </div>
+
+                {annualizedRoi !== null && (
+                  <div className="rounded-3xl border border-cyan-100 bg-gradient-to-r from-cyan-50 to-blue-50 p-5 shadow-sm">
+                    <p className="text-sm font-bold text-slate-500">Annualized ROI</p>
+                    <p className={`mt-2 text-3xl font-black ${annualizedRoi >= 0 ? "text-cyan-700" : "text-red-600"}`}>{formatNumber(annualizedRoi)}%</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex min-h-[350px] items-center justify-center rounded-3xl border-2 border-dashed border-blue-100 bg-white/70 p-8 text-center">
+                <div>
+                  <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-2xl font-black text-blue-600 shadow-inner">%</div>
+                  <h3 className="text-xl font-extrabold text-slate-800">Results appear here</h3>
+                  <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-500">Enter your investment and final value to see your ROI instantly.</p>
+                </div>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <div className="mx-auto mt-8 max-w-4xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-xl font-extrabold text-slate-900">How ROI is Calculated</h2>
+          <div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-3">
+            <div className="rounded-2xl bg-slate-50 p-4"><strong className="text-slate-900">Net Profit</strong><br />Return − Investment</div>
+            <div className="rounded-2xl bg-blue-50 p-4"><strong className="text-slate-900">ROI</strong><br />(Net Profit ÷ Investment) × 100</div>
+            <div className="rounded-2xl bg-slate-50 p-4"><strong className="text-slate-900">Multiple</strong><br />Return ÷ Investment</div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
