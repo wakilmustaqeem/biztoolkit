@@ -1,0 +1,23 @@
+name: Check Root Files
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify critical files exist
+        run: |
+          test -f package.json
+          test -f next.config.ts
+          test -f app/layout.tsx
+          test -f app/page.tsx
+          test -f app/globals.css
+          test -f postcss.config.mjs
+          echo "All critical files are present."
