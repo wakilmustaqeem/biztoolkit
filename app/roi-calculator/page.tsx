@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "ROI Calculator – Calculate Return on Investment",
   description:
     "Free ROI calculator to measure return on investment. Calculate net profit, ROI percentage, ROI multiple, and annualized ROI for any investment.",
+  alternates: {
+    canonical: "/roi-calculator",
+  },
   openGraph: {
     title: "ROI Calculator – Calculate Return on Investment",
     description:
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
+const webApplicationJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "ROI Calculator",
@@ -30,12 +33,55 @@ const jsonLd = {
   },
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do I calculate ROI in Excel?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Use the formula =(Return - Investment) / Investment and format the result as a percentage.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the difference between ROI and IRR?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "ROI is a simple percentage return. IRR (Internal Rate of Return) accounts for the time value of money and the timing of cash flows. Annualized ROI is a simplified annualized return for a single investment and is not equivalent to IRR when there are multiple cash flows.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can ROI be negative?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. If the return is less than the investment, ROI will be negative, indicating a loss.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is ROI calculated before or after tax?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "ROI can be calculated either way. State whether your inputs are pre-tax or after-tax and use the same basis when comparing investments.",
+      },
+    },
+  ],
+};
+
 export default function RoiCalculatorPage() {
   return (
     <main className="min-h-screen bg-gray-50 py-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webApplicationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <RoiCalculator />
 
