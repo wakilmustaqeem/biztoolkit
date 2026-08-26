@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const formatNumber = (num: number) =>
@@ -136,12 +137,12 @@ export default function AtmCalculator() {
         </div>
 
         <div className="flex gap-3">
-          <a
+          <Link
             href="/"
             className="flex-1 py-2 text-center text-lg font-semibold text-lime-300 bg-slate-800 border border-lime-400/40 rounded-xl shadow-[0_0_15px_rgba(163,230,53,0.4)] hover:bg-slate-700"
           >
             Home
-          </a>
+          </Link>
           <button
             className="flex-1 py-2 text-lg font-semibold text-orange-300 bg-slate-800 border border-orange-400/40 rounded-xl shadow-[0_0_15px_rgba(251,146,60,0.4)] hover:bg-slate-700"
             onClick={handleClear}
