@@ -4,14 +4,14 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Free Business Calculators | BizToolkit",
   description:
-    "Use free profit margin, ROI, break-even, markup, discount, and commission calculators designed for freelancers, entrepreneurs, and small businesses.",
+    "Use free profit margin, ROI, break-even, markup, discount, commission, and VAT/sales tax calculators designed for freelancers, entrepreneurs, and small businesses.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Free Business Calculators | BizToolkit",
     description:
-      "Calculate profit margin, ROI, break-even point, markup, discounts, and commissions with free business tools from BizToolkit.",
+      "Calculate profit margin, ROI, break-even point, markup, discounts, commissions, and VAT/sales tax with free business tools from BizToolkit.",
     url: "https://biztoolkit-ashy.vercel.app",
     type: "website",
   },
@@ -54,6 +54,12 @@ const calculators = [
     description:
       "Compute commission amount and total earnings from a base amount.",
   },
+  {
+    href: "/vat-calculator",
+    title: "VAT / Sales Tax Calculator",
+    description:
+      "Calculate tax amount, net price, and final price for VAT or sales tax.",
+  },
 ];
 
 export default function Home() {
@@ -66,8 +72,8 @@ export default function Home() {
         <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
           BizToolkit offers simple, free calculators to help you make smarter
           business decisions. Quickly calculate profit margins, ROI,
-          break-even points, markups, discounts, and commissions without
-          complex spreadsheets.
+          break-even points, markups, discounts, commissions, and VAT or sales
+          tax without complex spreadsheets.
         </p>
 
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
