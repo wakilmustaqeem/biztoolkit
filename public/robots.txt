@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://biztoolkit-ashy.vercel.app/sitemap.xml
