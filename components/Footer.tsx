@@ -11,6 +11,8 @@ export default function Footer() {
         <nav className="flex gap-6 text-sm text-gray-600">
           <Link href="/" className="hover:text-blue-600">Home</Link>
           <Link href="/#calculators" className="hover:text-blue-600">Calculators</Link>
+          <Link href="/about" className="hover:text-blue-600">About</Link>
+          <Link href="/disclaimer" className="hover:text-blue-600">Disclaimer</Link>
           <Link href="/privacy" className="hover:text-blue-600">Privacy</Link>
           <Link href="/contact" className="hover:text-blue-600">Contact</Link>
         </nav>
