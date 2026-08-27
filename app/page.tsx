@@ -5,9 +5,7 @@ export const metadata: Metadata = {
   title: "Free Business Calculators | BizToolkit",
   description:
     "Use free profit margin, ROI, break-even, markup, discount, commission, and VAT calculators for freelancers and small businesses.",
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Free Business Calculators | BizToolkit",
     description:
@@ -18,89 +16,39 @@ export const metadata: Metadata = {
 };
 
 const calculators = [
-  {
-    href: "/profit-margin-calculator",
-    title: "Profit Margin Calculator",
-    description: "Calculate net profit and profit margin from revenue and total costs.",
-  },
-  {
-    href: "/roi-calculator",
-    title: "ROI Calculator",
-    description: "Measure return on investment, net profit, and annualized ROI.",
-  },
-  {
-    href: "/break-even-calculator",
-    title: "Break-even Calculator",
-    description: "Find break-even units and revenue to cover fixed and variable costs.",
-  },
-  {
-    href: "/markup-calculator",
-    title: "Markup Calculator",
-    description: "Determine selling price from cost and markup percentage, and see profit margin.",
-  },
-  {
-    href: "/discount-calculator",
-    title: "Discount Calculator",
-    description: "Calculate discount amount, final price, and savings on any purchase.",
-  },
-  {
-    href: "/commission-calculator",
-    title: "Commission Calculator",
-    description: "Compute commission amount and total earnings from a base amount.",
-  },
-  {
-    href: "/vat-calculator",
-    title: "VAT / Sales Tax Calculator",
-    description: "Calculate tax amount, net price, and final price for VAT or sales tax.",
-  },
+  { href: "/profit-margin-calculator", title: "Profit Margin Calculator", description: "Calculate net profit and profit margin from revenue and total costs." },
+  { href: "/roi-calculator", title: "ROI Calculator", description: "Measure return on investment, net profit, and annualized ROI." },
+  { href: "/break-even-calculator", title: "Break-even Calculator", description: "Find break-even units and revenue to cover fixed and variable costs." },
+  { href: "/markup-calculator", title: "Markup Calculator", description: "Determine selling price from cost and markup percentage, and see profit margin." },
+  { href: "/discount-calculator", title: "Discount Calculator", description: "Calculate discount amount, final price, and savings on any purchase." },
+  { href: "/commission-calculator", title: "Commission Calculator", description: "Compute commission amount and total earnings from a base amount." },
+  { href: "/vat-calculator", title: "VAT / Sales Tax Calculator", description: "Calculate tax amount, net price, and final price for VAT or sales tax." },
 ];
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-b from-blue-50 to-white py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 py-12 px-4">
       <div className="max-w-5xl mx-auto text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">
-          Free Business Calculators
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-          Simple, fast tools for pricing, profit, tax, ROI, and everyday business decisions.
-        </p>
-        <Link
-          href="#calculators"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-        >
-          Start Calculating
-        </Link>
+        <h1 className="text-4xl sm:text-5xl font-black text-white mb-3">Free Business Calculators</h1>
+        <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-6">Simple, fast tools for pricing, profit, tax, ROI, and everyday business decisions.</p>
+        <Link href="#calculators" className="inline-block bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold shadow-[0_6px_0_rgba(79,70,229,0.45)] hover:bg-indigo-400 transition active:translate-y-1 active:shadow-none">Start Calculating</Link>
       </div>
 
       <div id="calculators" className="max-w-5xl mx-auto">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-          Free Business Calculators
-        </h2>
+        <h2 className="text-2xl font-bold text-white mb-6">Free Business Calculators</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {calculators.map((calc) => (
-            <Link
-              key={calc.href}
-              href={calc.href}
-              className="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition border border-gray-200"
-            >
-              <h3 className="text-xl font-bold text-gray-800 mb-2">{calc.title}</h3>
-              <p className="text-gray-600">{calc.description}</p>
+            <Link key={calc.href} href={calc.href} className="rounded-3xl bg-gradient-to-b from-slate-800 to-slate-900 p-6 border border-white/10 shadow-[0_12px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.35)] hover:-translate-y-1 transition">
+              <h3 className="text-xl font-bold text-white mb-2">{calc.title}</h3>
+              <p className="text-slate-300 text-sm">{calc.description}</p>
             </Link>
           ))}
         </div>
       </div>
 
-      <section className="max-w-5xl mx-auto mt-16 text-gray-700">
-        <h2 className="text-2xl font-semibold mb-4">
-          Why Use These Business Calculators?
-        </h2>
-        <p>
-          Whether you’re a freelancer setting your rates, an entrepreneur
-          evaluating a project, or a small business owner planning pricing,
-          these tools help you understand your numbers quickly. All
-          calculators are free, easy to use, and work on any device.
-        </p>
+      <section className="max-w-5xl mx-auto mt-16 text-slate-300">
+        <h2 className="text-2xl font-semibold mb-4 text-white">Why Use These Business Calculators?</h2>
+        <p>Whether you’re a freelancer setting your rates, an entrepreneur evaluating a project, or a small business owner planning pricing, these tools help you understand your numbers quickly. All calculators are free, easy to use, and work on any device.</p>
       </section>
     </div>
   );
