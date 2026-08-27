@@ -34,7 +34,7 @@ export default function DiscountCalculator() {
 
   return (
     <div className="mx-auto max-w-2xl p-4">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
+      <div className="rounded-2xl border border-rose-200 bg-white p-6 shadow-lg">
         <h1 className="mb-4 text-2xl font-bold text-gray-800">
           Discount Calculator
         </h1>
@@ -53,7 +53,7 @@ export default function DiscountCalculator() {
               value={originalPrice}
               onChange={(e) => setOriginalPrice(e.target.value)}
               placeholder="e.g. 200"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-rose-500/20 px-4 py-2 text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400/50"
             />
           </div>
 
@@ -71,7 +71,7 @@ export default function DiscountCalculator() {
               value={discountPercent}
               onChange={(e) => setDiscountPercent(e.target.value)}
               placeholder="e.g. 25"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-rose-500/20 px-4 py-2 text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400/50"
             />
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function DiscountCalculator() {
         <div className="mt-6 flex gap-2">
           <button
             onClick={loadExample}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+            className="rounded-lg bg-rose-500 px-4 py-2 text-white transition hover:bg-rose-600"
           >
             Load Example
           </button>
@@ -92,20 +92,20 @@ export default function DiscountCalculator() {
         </div>
 
         {isValid && (
-          <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-4">
+          <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50/50 p-4">
             <h2 className="mb-3 text-xl font-semibold text-gray-800">Results</h2>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Discount Amount</span>
-                <span className="font-bold text-blue-700">${formatNumber(discountAmount!)}</span>
+                <span className="font-bold text-rose-300">${formatNumber(discountAmount!)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Final Price</span>
-                <span className="font-bold text-green-700">${formatNumber(finalPrice!)}</span>
+                <span className="font-bold text-rose-300">${formatNumber(finalPrice!)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">You Save</span>
-                <span className="font-bold text-purple-700">${formatNumber(discountAmount!)}</span>
+                <span className="font-bold text-rose-300">${formatNumber(discountAmount!)}</span>
               </div>
             </div>
           </div>
