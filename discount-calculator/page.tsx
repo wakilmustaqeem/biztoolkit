@@ -74,7 +74,7 @@ const faqJsonLd = {
 
 export default function DiscountCalculatorPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-red-100 py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
