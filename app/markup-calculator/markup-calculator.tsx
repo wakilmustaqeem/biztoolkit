@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 
 const formatNumber = (num: number) =>
@@ -16,20 +15,35 @@ export default function MarkupCalculator() {
   const sellingPrice = isValid ? cost + markupAmount! : null;
   const grossMargin = isValid && sellingPrice! > 0 ? ((sellingPrice! - cost) / sellingPrice!) * 100 : null;
 
-  const loadExample = () => { setCostPrice("50"); setMarkupPercent("60"); };
-  const reset = () => { setCostPrice(""); setMarkupPercent(""); };
-
   return (
-    <div className="py-10 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-3xl shadow-xl border border-violet-100 p-8">
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-2">Markup Calculator</h1>
-        <p className="text-center text-gray-500 mb-8">Calculate selling price and understand markup vs margin.</p>
-        <div className="space-y-6">
-          <div><label htmlFor="costPrice" className="block text-sm font-semibold text-gray-700 mb-1">Cost Price ($)</label><input id="costPrice" type="number" inputMode="decimal" min="0" step="0.01" value={costPrice} onChange={(e) => setCostPrice(e.target.value)} placeholder="e.g. 50" className="w-full px-4 py-3 border border-violet-500/20 rounded-xl text-lg text-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-400/50 bg-violet-50/30" /></div>
-          <div><label htmlFor="markupPercent" className="block text-sm font-semibold text-gray-700 mb-1">Markup Percentage (%)</label><input id="markupPercent" type="number" inputMode="decimal" min="0" step="0.01" value={markupPercent} onChange={(e) => setMarkupPercent(e.target.value)} placeholder="e.g. 60" className="w-full px-4 py-3 border border-violet-500/20 rounded-xl text-lg text-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-400/50 bg-violet-50/30" /></div>
-          <div className="flex gap-3 pt-2"><button onClick={loadExample} className="flex-1 px-4 py-3 bg-violet-500 text-slate-950 font-semibold rounded-xl hover:bg-violet-400 transition shadow-[0_6px_0_rgba(139,92,246,0.4)]">Load Example</button><button onClick={reset} className="flex-1 px-4 py-3 bg-white text-violet-700 font-semibold rounded-xl border border-violet-300 hover:bg-violet-50 transition">Reset</button></div>
+    <div className="py-8 px-3 sm:px-4">
+      <div className="max-w-md mx-auto rounded-[2rem] bg-gradient-to-b from-slate-800 to-slate-900 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/10">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-1">Markup Calculator</h1>
+        <p className="text-center text-slate-300 text-sm mb-6">Selling price and markup vs margin</p>
+        <div className="space-y-5">
+          <div>
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Cost Price ($)</label>
+            <input type="number" inputMode="decimal" min="0" step="0.01" value={costPrice} onChange={(e) => setCostPrice(e.target.value)} placeholder="50" className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-lg font-semibold text-violet-300 placeholder-slate-600 border border-violet-500/20 focus:outline-none focus:ring-2 focus:ring-violet-400/50 shadow-inner" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Markup Percentage (%)</label>
+            <input type="number" inputMode="decimal" min="0" step="0.01" value={markupPercent} onChange={(e) => setMarkupPercent(e.target.value)} placeholder="60" className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-lg font-semibold text-violet-300 placeholder-slate-600 border border-violet-500/20 focus:outline-none focus:ring-2 focus:ring-violet-400/50 shadow-inner" />
+          </div>
+          <div className="flex gap-3 pt-1">
+            <button onClick={() => { setCostPrice("50"); setMarkupPercent("60"); }} className="flex-1 py-3 rounded-xl bg-violet-500 text-slate-950 font-bold text-sm hover:bg-violet-400 transition shadow-[0_6px_0_rgba(139,92,246,0.4)] active:translate-y-1 active:shadow-none">Load Example</button>
+            <button onClick={() => { setCostPrice(""); setMarkupPercent(""); }} className="flex-1 py-3 rounded-xl bg-slate-700 text-white font-bold text-sm hover:bg-slate-600 transition shadow-[0_6px_0_rgba(30,41,59,0.5)] active:translate-y-1 active:shadow-none">Reset</button>
+          </div>
         </div>
-        {isValid && <div className="mt-8 bg-gradient-to-r from-violet-50 to-purple-50 p-6 rounded-2xl border border-violet-100"><h2 className="text-xl font-bold text-gray-800 mb-4">Results</h2><div className="space-y-4"><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">Markup Amount</span><span className="text-2xl font-bold text-violet-300">${formatNumber(markupAmount!)}</span></div><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">Selling Price</span><span className="text-2xl font-bold text-violet-300">${formatNumber(sellingPrice!)}</span></div><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">Gross Profit Margin</span><span className="text-2xl font-bold text-violet-300">{formatNumber(grossMargin!)}%</span></div></div></div>}
+        {isValid && (
+          <div className="mt-7 rounded-2xl bg-white border border-violet-200 p-5 shadow-inner">
+            <h2 className="text-lg font-bold text-slate-900 mb-4">Results</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between"><span className="text-slate-600 text-sm">Markup Amount</span><span className="text-2xl font-bold text-violet-700">${formatNumber(markupAmount!)}</span></div>
+              <div className="flex justify-between"><span className="text-slate-600 text-sm">Selling Price</span><span className="text-2xl font-bold text-violet-700">${formatNumber(sellingPrice!)}</span></div>
+              <div className="flex justify-between"><span className="text-slate-600 text-sm">Gross Profit Margin</span><span className="text-2xl font-bold text-violet-700">{formatNumber(grossMargin!)}%</span></div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
