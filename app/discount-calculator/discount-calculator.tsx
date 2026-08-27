@@ -1,13 +1,131 @@
 "use client";
 
 import { useState } from "react";
-const formatNumber = (num: number) => new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(num);
+
+const formatNumber = (num: number) =>
+  new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(num);
+
 export default function DiscountCalculator() {
   const [originalPrice, setOriginalPrice] = useState<string>("");
   const [discountPercent, setDiscountPercent] = useState<string>("");
-  const price = parseFloat(originalPrice); const discount = parseFloat(discountPercent);
-  const isValid = !isNaN(price) && price > 0 && !isNaN(discount) && discount >= 0 && discount <= 100;
-  const discountAmount = isValid ? (price * discount) / 100 : null; const finalPrice = isValid ? price - discountAmount! : null;
-  const loadExample = () => { setOriginalPrice("200"); setDiscountPercent("25"); }; const reset = () => { setOriginalPrice(""); setDiscountPercent(""); };
-  return <div className="py-10 px-4"><div className="max-w-xl mx-auto bg-white rounded-3xl shadow-xl border border-blue-100 p-8"><h1 className="text-3xl font-bold text-gray-900 text-center mb-2">Discount Calculator</h1><p className="text-center text-gray-500 mb-8">Calculate discount amount, final price, and savings instantly.</p><div className="space-y-6"><div><label htmlFor="originalPrice" className="block text-sm font-semibold text-gray-700 mb-1">Original Price ($)</label><input id="originalPrice" type="number" inputMode="decimal" min="0" step="0.01" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} placeholder="e.g. 200" className="w-full px-4 py-3 border border-blue-200 rounded-xl text-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50/30" /></div><div><label htmlFor="discountPercent" className="block text-sm font-semibold text-gray-700 mb-1">Discount Percentage (%)</label><input id="discountPercent" type="number" inputMode="decimal" min="0" max="100" step="0.01" value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} placeholder="e.g. 25" className="w-full px-4 py-3 border border-blue-200 rounded-xl text-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50/30" /></div><div className="flex gap-3 pt-2"><button onClick={loadExample} className="flex-1 px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-md shadow-blue-200">Load Example</button><button onClick={reset} className="flex-1 px-4 py-3 bg-white text-blue-700 font-semibold rounded-xl border border-blue-300 hover:bg-blue-50 transition">Reset</button></div></div>{isValid && <div className="mt-8 bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-2xl border border-blue-100"><h2 className="text-xl font-bold text-gray-800 mb-4">Results</h2><div className="space-y-4"><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">Discount Amount</span><span className="text-2xl font-bold text-blue-600">${formatNumber(discountAmount!)}</span></div><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">Final Price</span><span className="text-2xl font-bold text-green-600">${formatNumber(finalPrice!)}</span></div><div className="flex items-center justify-between"><span className="text-gray-600 font-medium">You Save</span><span className="text-2xl font-bold text-purple-600">${formatNumber(discountAmount!)}</span></div></div></div>}</div></div>;
+
+  const price = parseFloat(originalPrice);
+  const discount = parseFloat(discountPercent);
+
+  const isValid =
+    !isNaN(price) &&
+    price > 0 &&
+    !isNaN(discount) &&
+    discount >= 0 &&
+    discount <= 100;
+
+  const discountAmount = isValid ? (price * discount) / 100 : null;
+  const finalPrice = isValid ? price - discountAmount! : null;
+
+  const loadExample = () => {
+    setOriginalPrice("200");
+    setDiscountPercent("25");
+  };
+
+  const reset = () => {
+    setOriginalPrice("");
+    setDiscountPercent("");
+  };
+
+  return (
+    <div className="py-8 px-3 sm:px-4">
+      <div className="max-w-md mx-auto rounded-[2rem] bg-gradient-to-b from-slate-800 to-slate-900 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)] border border-white/10">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-1">
+          Discount Calculator
+        </h1>
+        <p className="text-center text-slate-300 text-sm mb-6">
+          Discount amount, final price & savings
+        </p>
+
+        <div className="space-y-5">
+          <div>
+            <label
+              htmlFor="originalPrice"
+              className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide"
+            >
+              Original Price ($)
+            </label>
+            <input
+              id="originalPrice"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={originalPrice}
+              onChange={(e) => setOriginalPrice(e.target.value)}
+              placeholder="200"
+              className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-lg font-semibold text-cyan-300 placeholder-slate-600 border border-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 shadow-inner"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="discountPercent"
+              className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide"
+            >
+              Discount Percentage (%)
+            </label>
+            <input
+              id="discountPercent"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              max="100"
+              step="0.01"
+              value={discountPercent}
+              onChange={(e) => setDiscountPercent(e.target.value)}
+              placeholder="25"
+              className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-lg font-semibold text-cyan-300 placeholder-slate-600 border border-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 shadow-inner"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-1">
+            <button
+              onClick={loadExample}
+              className="flex-1 py-3 rounded-xl bg-cyan-500 text-slate-950 font-bold text-sm hover:bg-cyan-400 transition shadow-[0_6px_0_rgba(8,145,178,0.4)] active:translate-y-1 active:shadow-none"
+            >
+              Load Example
+            </button>
+            <button
+              onClick={reset}
+              className="flex-1 py-3 rounded-xl bg-slate-700 text-white font-bold text-sm hover:bg-slate-600 transition shadow-[0_6px_0_rgba(30,41,59,0.5)] active:translate-y-1 active:shadow-none"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        {isValid && (
+          <div className="mt-7 rounded-2xl bg-slate-950/60 border border-cyan-500/20 p-5">
+            <h2 className="text-lg font-bold text-white mb-4">Results</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 text-sm">Discount Amount</span>
+                <span className="text-xl font-bold text-cyan-300">
+                  ${formatNumber(discountAmount!)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 text-sm">Final Price</span>
+                <span className="text-xl font-bold text-emerald-300">
+                  ${formatNumber(finalPrice!)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 text-sm">You Save</span>
+                <span className="text-xl font-bold text-fuchsia-300">
+                  ${formatNumber(discountAmount!)}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
