@@ -31,7 +31,7 @@ export default function Footer() {
           </Link>
         </nav>
       </div>
-      <div className="text-center text-sm text-gray-400 pb-4">
+      <div className="text-center text-sm text-gray-600 pb-4">
         © {new Date().getFullYear()} BizToolkit. All rights reserved.
       </div>
     </footer>
