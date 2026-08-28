@@ -23,6 +23,7 @@ const calculators = [
   { href: "/discount-calculator", title: "Discount Calculator", description: "Calculate discount amount, final price, and savings on any purchase." },
   { href: "/commission-calculator", title: "Commission Calculator", description: "Compute commission amount and total earnings from a base amount." },
   { href: "/vat-calculator", title: "VAT / Sales Tax Calculator", description: "Calculate tax amount, net price, and final price for VAT or sales tax." },
+  { href: "/percentage-calculator", title: "Percentage Calculator", description: "Calculate what a percentage of any number is." },
 ];
 
 export default function Home() {
