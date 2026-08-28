@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/discount-calculator",
     "/commission-calculator",
     "/vat-calculator",
+    "/percentage-calculator",
     "/about",
     "/disclaimer",
     "/privacy",
