@@ -1,0 +1,95 @@
+name: BizToolkit Monitor
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Read & Check endpoints
+        id: check
+        shell: bash
+        run: |
+          set +e
+
+          HOMEPAGE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/)
+          SITEMAP=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/sitemap.xml)
+          CALC_PAGE=$(curl -fsS --max-time 15 https://biztoolkit-ashy.vercel.app/calculators)
+          CALC_EXIT=$?
+          CALC_CONTENT=$(printf '%s' "$CALC_PAGE" | grep -oi "calculator" | wc -l | tr -d ' ')
+
+          echo "Homepage: $HOMEPAGE"
+          echo "Sitemap: $SITEMAP"
+          echo "Calculators content matches: $CALC_CONTENT"
+
+          if [ "$HOMEPAGE" != "200" ] || [ "$SITEMAP" != "200" ] || [ "$CALC_EXIT" -ne 0 ] || [ "$CALC_CONTENT" -eq 0 ]; then
+            echo "❌ Check Failed!" > report.txt
+            echo "Homepage: $HOMEPAGE" >> report.txt
+            echo "Sitemap: $SITEMAP" >> report.txt
+            echo "Calculators content matches: $CALC_CONTENT" >> report.txt
+            echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
+            exit 1
+          fi
+
+          echo "✅ All checks passed!" > report.txt
+          echo "Homepage: $HOMEPAGE, Sitemap: $SITEMAP, Calculators: Found" >> report.txt
+          echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
+
+      - name: Report (Artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-report
+          path: report.txt
+          if-no-files-found: ignore
+
+      - name: Alert (Reuse Open Issue)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.existsSync('report.txt')
+              ? fs.readFileSync('report.txt', 'utf8')
+              : 'Monitoring workflow failed before report.txt was created.';
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['monitoring'],
+              per_page: 100
+            });
+
+            const existing = issues.find(issue =>
+              issue.title.includes('BizToolkit Monitor Alert')
+            );
+
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: report
+              });
+              console.log(`Updated existing issue #${existing.number}`);
+            } else {
+              const newIssue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🚨 BizToolkit Monitor Alert - Site Issue Detected',
+                body: report,
+                labels: ['monitoring']
+              });
+              console.log(`Created new issue #${newIssue.number}`);
+            }
