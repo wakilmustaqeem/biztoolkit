@@ -1,0 +1,97 @@
+name: BizToolkit Weekly SEO Report
+
+on:
+  schedule:
+    - cron: '30 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  seo-report:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://biztoolkit-ashy.vercel.app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check SEO endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p seo-report
+          for endpoint in / /robots.txt /sitemap.xml /calculators; do
+            code=$(curl -L -sS -o /tmp/body -w '%{http_code}' --max-time 20 "$SITE_URL$endpoint")
+            echo "$endpoint $code" | tee -a seo-report/endpoints.txt
+            test "$code" = "200"
+          done
+
+      - name: Run Lighthouse SEO audit
+        shell: bash
+        run: |
+          npx --yes lighthouse "$SITE_URL" \
+            --only-categories=seo,performance,accessibility,best-practices \
+            --output=json \
+            --output-path=seo-report/lighthouse.json \
+            --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage'
+
+      - name: Build weekly report
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, datetime, pathlib
+          data=json.load(open('seo-report/lighthouse.json'))
+          cats=data['categories']
+          lines=[
+            '# BizToolkit Weekly SEO Report',
+            '',
+            f"Generated: {datetime.datetime.utcnow().isoformat()} UTC",
+            '',
+            '## Lighthouse scores',
+          ]
+          for key in ('seo','performance','accessibility','best-practices'):
+            score=cats.get(key,{}).get('score')
+            lines.append(f"- {key}: {round(score*100) if score is not None else 'N/A'}")
+          lines += ['', '## Endpoint checks', '', '```', pathlib.Path('seo-report/endpoints.txt').read_text().strip(), '```', '', '## Policy', '- Read-only reporting: no automatic code changes, merges, or deployments.', '- Search Console, AdSense, and Vercel Analytics credentials are intentionally not assumed.', '- Review this report weekly and make code changes only when evidence supports them.']
+          pathlib.Path('seo-report/weekly-report.md').write_text('\n'.join(lines))
+          PY
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-seo-report
+          path: seo-report/
+
+      - name: Publish/update SEO issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('seo-report/weekly-report.md', 'utf8');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['seo-report'],
+              per_page: 100
+            });
+            const existing = issues.find(i => i.title === 'BizToolkit Weekly SEO Report');
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: report
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'BizToolkit Weekly SEO Report',
+                body: report,
+                labels: ['seo-report']
+              });
+            }
