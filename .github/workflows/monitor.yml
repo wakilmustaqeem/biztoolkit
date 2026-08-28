@@ -22,9 +22,9 @@ jobs:
         run: |
           set +e
 
-          HOMEPAGE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit.vercel.app/)
-          SITEMAP=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit.vercel.app/sitemap.xml)
-          CALC_PAGE=$(curl -fsS --max-time 15 https://biztoolkit.vercel.app/calculators)
+          HOMEPAGE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/)
+          SITEMAP=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/sitemap.xml)
+          CALC_PAGE=$(curl -fsS --max-time 15 https://biztoolkit-ashy.vercel.app/calculators)
           CALC_EXIT=$?
           CALC_CONTENT=$(printf '%s' "$CALC_PAGE" | grep -oi "calculator" | wc -l | tr -d ' ')
 
