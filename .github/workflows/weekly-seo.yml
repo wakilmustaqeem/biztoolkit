@@ -23,7 +23,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p seo-report
-          for endpoint in / /robots.txt /sitemap.xml /calculators; do
+          endpoints=(/ /robots.txt /sitemap.xml /profit-margin-calculator /roi-calculator /break-even-calculator /markup-calculator /discount-calculator /commission-calculator /vat-calculator)
+          for endpoint in "${endpoints[@]}"; do
             code=$(curl -L -sS -o /tmp/body -w '%{http_code}' --max-time 20 "$SITE_URL$endpoint")
             echo "$endpoint $code" | tee -a seo-report/endpoints.txt
             test "$code" = "200"
@@ -45,13 +46,7 @@ jobs:
           import json, datetime, pathlib
           data=json.load(open('seo-report/lighthouse.json'))
           cats=data['categories']
-          lines=[
-            '# BizToolkit Weekly SEO Report',
-            '',
-            f"Generated: {datetime.datetime.utcnow().isoformat()} UTC",
-            '',
-            '## Lighthouse scores',
-          ]
+          lines=['# BizToolkit Weekly SEO Report','',f"Generated: {datetime.datetime.utcnow().isoformat()} UTC",'','## Lighthouse scores']
           for key in ('seo','performance','accessibility','best-practices'):
             score=cats.get(key,{}).get('score')
             lines.append(f"- {key}: {round(score*100) if score is not None else 'N/A'}")
