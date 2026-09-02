@@ -5,6 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     "",
+    "/calculators",
     "/profit-margin-calculator",
     "/roi-calculator",
     "/break-even-calculator",
@@ -12,6 +13,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/discount-calculator",
     "/commission-calculator",
     "/vat-calculator",
+    "/cagr-calculator",
+    "/loan-payment-calculator",
+    "/hourly-rate-calculator",
     "/about",
     "/disclaimer",
     "/privacy",
