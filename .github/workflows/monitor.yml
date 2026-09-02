@@ -25,6 +25,7 @@ jobs:
           HOMEPAGE=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/)
           SITEMAP=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/sitemap.xml)
           ROBOTS=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/robots.txt)
+          CALCULATORS_HUB=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/calculators)
 
           CALCULATOR_ROUTES=(
             /profit-margin-calculator
@@ -34,6 +35,9 @@ jobs:
             /discount-calculator
             /commission-calculator
             /vat-calculator
+            /cagr-calculator
+            /loan-payment-calculator
+            /hourly-rate-calculator
           )
 
           CALC_FAILURES=0
@@ -48,20 +52,22 @@ jobs:
           echo "Homepage: $HOMEPAGE"
           echo "Sitemap: $SITEMAP"
           echo "Robots: $ROBOTS"
+          echo "Calculators hub: $CALCULATORS_HUB"
           echo "Calculator route failures: $CALC_FAILURES"
 
-          if [ "$HOMEPAGE" != "200" ] || [ "$SITEMAP" != "200" ] || [ "$ROBOTS" != "200" ] || [ "$CALC_FAILURES" -ne 0 ]; then
+          if [ "$HOMEPAGE" != "200" ] || [ "$SITEMAP" != "200" ] || [ "$ROBOTS" != "200" ] || [ "$CALCULATORS_HUB" != "200" ] || [ "$CALC_FAILURES" -ne 0 ]; then
             echo "❌ Check Failed!" > report.txt
             echo "Homepage: $HOMEPAGE" >> report.txt
             echo "Sitemap: $SITEMAP" >> report.txt
             echo "Robots: $ROBOTS" >> report.txt
+            echo "Calculators hub: $CALCULATORS_HUB" >> report.txt
             echo "Calculator route failures: $CALC_FAILURES" >> report.txt
             echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
             exit 1
           fi
 
           echo "✅ All checks passed!" > report.txt
-          echo "Homepage: $HOMEPAGE, Sitemap: $SITEMAP, Robots: $ROBOTS, Calculators: 7/7" >> report.txt
+          echo "Homepage: $HOMEPAGE, Sitemap: $SITEMAP, Robots: $ROBOTS, Calculators hub: $CALCULATORS_HUB, Calculators: 10/10" >> report.txt
           echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
 
       - name: Report (Artifact)
