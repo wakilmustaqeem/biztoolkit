@@ -1,3 +1,59 @@
 "use client";
 import { useMemo, useState } from "react";
-export default function LoanPaymentCalculator(){const [p,setP]=useState(100000),[rate,setRate]=useState(8),[years,setYears]=useState(5);const m=useMemo(()=>{const r=rate/100/12,n=years*12;return p>0&&n>0?(r===0?p/n:p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)):0},[p,rate,years]);return <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-4 py-12"><div className="mx-auto max-w-4xl"><div className="mb-8 text-center"><span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-indigo-200">BUSINESS TOOL • LOANS</span><h1 className="mt-5 text-4xl font-black text-white sm:text-5xl">Loan Payment Calculator</h1><p className="mx-auto mt-4 max-w-2xl text-slate-300">Estimate monthly payments for a loan using principal, annual interest rate, and repayment term.</p></div><div className="grid gap-6 md:grid-cols-2"><section className="rounded-3xl border border-white/10 bg-white/5 p-6"><h2 className="mb-5 text-xl font-bold text-white">Loan details</h2>{[["Loan amount",p,setP],["Annual interest rate (%)",rate,setRate],["Term (years)",years,setYears]].map(([label,val,setter]:any)=><label key={label as string} className="mb-4 block text-sm text-slate-300">{label as string}<input type="number" min="0" value={val as number} onChange={e=>setter(Number(e.target.value))} className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"/></label>)}</section><section className="rounded-3xl border border-indigo-300/20 bg-indigo-500/10 p-8 text-center"><p className="text-sm uppercase tracking-wider text-indigo-200">Estimated monthly payment</p><div className="my-8 text-5xl font-black text-white">{m.toLocaleString(undefined,{maximumFractionDigits:2})}</div><p className="text-slate-300">This estimate excludes fees, insurance, taxes, and other lender-specific charges.</p></section></div><article className="mt-8 rounded-3xl bg-white p-7 text-slate-700"><h2 className="text-2xl font-bold text-slate-900">How loan payments work</h2><p className="mt-3">For a standard amortizing loan, each monthly payment combines interest and principal. The payment estimate depends on the amount borrowed, annual interest rate, and number of monthly payments.</p><h2 className="mt-6 text-2xl font-bold text-slate-900">Use this estimate wisely</h2><p className="mt-3">Compare payment estimates with your budget and check the lender's actual annual percentage rate, fees, taxes, and repayment terms before making a financial decision.</p></article></div></main>}
+
+type Field = [string, number, (value: number) => void];
+
+export default function LoanPaymentCalculator() {
+  const [principal, setPrincipal] = useState(100000);
+  const [rate, setRate] = useState(8);
+  const [years, setYears] = useState(5);
+  const monthlyPayment = useMemo(() => {
+    const monthlyRate = rate / 100 / 12;
+    const payments = years * 12;
+    return principal > 0 && payments > 0
+      ? monthlyRate === 0
+        ? principal / payments
+        : (principal * monthlyRate * Math.pow(1 + monthlyRate, payments)) /
+          (Math.pow(1 + monthlyRate, payments) - 1)
+      : 0;
+  }, [principal, rate, years]);
+  const fields: Field[] = [
+    ["Loan amount", principal, setPrincipal],
+    ["Annual interest rate (%)", rate, setRate],
+    ["Term (years)", years, setYears],
+  ];
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 px-4 py-12">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-8 text-center">
+          <span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-indigo-200">BUSINESS TOOL • LOANS</span>
+          <h1 className="mt-5 text-4xl font-black text-white sm:text-5xl">Loan Payment Calculator</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-300">Estimate monthly payments for a loan using principal, annual interest rate, and repayment term.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <section className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <h2 className="mb-5 text-xl font-bold text-white">Loan details</h2>
+            {fields.map(([label, value, setter]) => (
+              <label key={label} className="mb-4 block text-sm text-slate-300">
+                {label}
+                <input type="number" min="0" value={value} onChange={(event) => setter(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white" />
+              </label>
+            ))}
+          </section>
+          <section className="rounded-3xl border border-indigo-300/20 bg-indigo-500/10 p-8 text-center">
+            <p className="text-sm uppercase tracking-wider text-indigo-200">Estimated monthly payment</p>
+            <div className="my-8 text-5xl font-black text-white">{monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
+            <p className="text-slate-300">This estimate excludes fees, insurance, taxes, and other lender-specific charges.</p>
+          </section>
+        </div>
+        <article className="mt-8 rounded-3xl bg-white p-7 text-slate-700">
+          <h2 className="text-2xl font-bold text-slate-900">How loan payments work</h2>
+          <p className="mt-3">For a standard amortizing loan, each monthly payment combines interest and principal. The payment estimate depends on the amount borrowed, annual interest rate, and number of monthly payments.</p>
+          <h2 className="mt-6 text-2xl font-bold text-slate-900">Use this estimate wisely</h2>
+          <p className="mt-3">Compare payment estimates with your budget and check the lender&apos;s actual annual percentage rate, fees, taxes, and repayment terms before making a financial decision.</p>
+        </article>
+      </div>
+    </main>
+  );
+}
