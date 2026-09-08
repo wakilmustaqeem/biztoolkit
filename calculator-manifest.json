@@ -1,0 +1,21 @@
+{
+  "target": 50,
+  "countRule": "One calculator equals one unique production route under /app/*-calculator/page.tsx.",
+  "excludeRoutes": ["/calculators"],
+  "requiredPageSignals": ["export const metadata", "alternates", "canonical"],
+  "baseline": [
+    "profit-margin-calculator",
+    "roi-calculator",
+    "break-even-calculator",
+    "markup-calculator",
+    "discount-calculator",
+    "commission-calculator",
+    "vat-calculator",
+    "cagr-calculator",
+    "loan-payment-calculator",
+    "hourly-rate-calculator"
+  ],
+  "batches": [
+    {"slug": "inflation-calculator", "status": "in-pr"}
+  ]
+}
