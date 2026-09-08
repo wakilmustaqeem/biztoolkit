@@ -1,0 +1,27 @@
+name: Calculator Governance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "calculator-manifest.json"
+      - "scripts/check-calculator-contract.mjs"
+      - ".github/workflows/calculator-governance.yml"
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "calculator-manifest.json"
+      - "scripts/check-calculator-contract.mjs"
+      - ".github/workflows/calculator-governance.yml"
+
+jobs:
+  audit-calculators:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Audit standalone calculator pages
+        run: node scripts/check-calculator-contract.mjs

@@ -1,0 +1,1 @@
+Governance source of truth: calculator-manifest.json. Each calculator is a standalone app/<slug>-calculator/page.tsx route. The /calculators hub is a directory page and is excluded from calculator counts.

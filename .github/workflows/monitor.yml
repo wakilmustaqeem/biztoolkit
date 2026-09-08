@@ -26,18 +26,12 @@ jobs:
           SITEMAP=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/sitemap.xml)
           ROBOTS=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 https://biztoolkit-ashy.vercel.app/robots.txt)
 
-          CALCULATOR_ROUTES=(
-            /profit-margin-calculator
-            /roi-calculator
-            /break-even-calculator
-            /markup-calculator
-            /discount-calculator
-            /commission-calculator
-            /vat-calculator
-          )
+          CALC_ROUTES=$(node -e "const fs=require('fs');const m=JSON.parse(fs.readFileSync('calculator-manifest.json','utf8'));const a=[...(m.baseline||[]).map(s=>'/'+s),...(m.batches||[]).map(x=>x.route||('/'+x.slug))];console.log([...new Set(a)].sort().join(' '))")
 
           CALC_FAILURES=0
-          for route in "${CALCULATOR_ROUTES[@]}"; do
+          CALC_COUNT=0
+          for route in $CALC_ROUTES; do
+            CALC_COUNT=$((CALC_COUNT + 1))
             code=$(curl -fsS -o /dev/null -w "%{http_code}" --max-time 15 "https://biztoolkit-ashy.vercel.app$route")
             echo "$route: $code"
             if [ "$code" != "200" ]; then
@@ -48,6 +42,7 @@ jobs:
           echo "Homepage: $HOMEPAGE"
           echo "Sitemap: $SITEMAP"
           echo "Robots: $ROBOTS"
+          echo "Calculator routes checked: $CALC_COUNT"
           echo "Calculator route failures: $CALC_FAILURES"
 
           if [ "$HOMEPAGE" != "200" ] || [ "$SITEMAP" != "200" ] || [ "$ROBOTS" != "200" ] || [ "$CALC_FAILURES" -ne 0 ]; then
@@ -55,13 +50,14 @@ jobs:
             echo "Homepage: $HOMEPAGE" >> report.txt
             echo "Sitemap: $SITEMAP" >> report.txt
             echo "Robots: $ROBOTS" >> report.txt
+            echo "Calculator routes checked: $CALC_COUNT" >> report.txt
             echo "Calculator route failures: $CALC_FAILURES" >> report.txt
             echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
             exit 1
           fi
 
           echo "✅ All checks passed!" > report.txt
-          echo "Homepage: $HOMEPAGE, Sitemap: $SITEMAP, Robots: $ROBOTS, Calculators: 7/7" >> report.txt
+          echo "Homepage: $HOMEPAGE, Sitemap: $SITEMAP, Robots: $ROBOTS, Calculators checked: $CALC_COUNT" >> report.txt
           echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> report.txt
 
       - name: Report (Artifact)
