@@ -1,0 +1,27 @@
+name: Calculator 50 Release Gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enforce 50-calculator release target
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=$(node -p "require('./calculator-manifest.json').target")
+          count=$(find app -mindepth 2 -maxdepth 2 -type f -path 'app/*-calculator/page.tsx' | wc -l | tr -d ' ')
+          echo "Standalone calculator pages: $count / $target"
+          if [ "$count" -lt "$target" ]; then
+            echo "Release blocked: need $((target-count)) more standalone calculator pages."
+            exit 1
+          fi
+          echo "Release target reached: $count standalone calculator pages."
