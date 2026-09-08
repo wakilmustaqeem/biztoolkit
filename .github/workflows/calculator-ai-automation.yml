@@ -8,6 +8,11 @@ on:
         required: true
         default: 'true'
         type: boolean
+      enable_auto_merge:
+        description: 'Enable GitHub auto-merge for the AI PR when checks pass'
+        required: true
+        default: 'true'
+        type: boolean
   push:
     branches: [main]
   pull_request:
@@ -20,12 +25,13 @@ permissions:
   pull-requests: write
   copilot-requests: write
 
+env:
+  TARGET_CALCULATORS: 50
+  ADSENSE_PUBLISHER_ID: ca-pub-5184606115658751
+
 concurrency:
   group: calculators-ai-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  TARGET_CALCULATORS: 50
 
 jobs:
   validate:
@@ -53,6 +59,12 @@ jobs:
             echo "Too many calculator routes: $count > $TARGET_CALCULATORS"
             exit 1
           fi
+      - name: Verify AdSense publisher wiring
+        shell: bash
+        run: |
+          grep -R "${ADSENSE_PUBLISHER_ID}" app --include='*.tsx' --include='*.ts' >/dev/null
+          grep -R "google-adsense-account" app --include='*.tsx' --include='*.ts' >/dev/null
+          echo "AdSense publisher wiring verified for ${ADSENSE_PUBLISHER_ID}."
 
   ai-build:
     name: AI generate missing calculator pages
@@ -78,7 +90,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          copilot -p "Act as the BizToolkit calculator implementation agent. Work ONLY in this repository. The project contract is exactly 50 unique production calculator routes under app/*-calculator/page.tsx. Read calculator-manifest.json and scripts/check-calculator-contract.mjs first. Inspect existing calculator pages and preserve their architecture. Implement only missing calculators until the manifest target of 50 is satisfied. Every calculator must have: working client-side calculation logic, unique useful content, export const metadata, canonical/alternates metadata, accessible labels, responsive UI, breadcrumb/back-to-BizToolkit navigation, related-calculator internal links, and AdSense-ready top and bottom slots without inventing a publisher ID. Do not add fake backlinks, paid-link schemes, or copied content. Update calculator-manifest.json status/count data as appropriate. Do not change authentication, secrets, Vercel credentials, repository settings, or unrelated projects. Keep all changes production-buildable. After implementation, run npm run lint, node scripts/check-calculator-contract.mjs, and npm run build; fix failures. Do not use external paid APIs or secret keys." --allow-tool='shell(git:*)' --allow-tool='shell(npm:*)' --allow-tool=write --no-ask-user
+          copilot -p "Act as the BizToolkit calculator implementation agent. Work ONLY in this repository. The project contract is exactly 50 unique production calculator routes under app/*-calculator/page.tsx. Read calculator-manifest.json and scripts/check-calculator-contract.mjs first. Inspect existing calculator pages and preserve their architecture. Implement only missing calculators until the manifest target of 50 is satisfied. Every calculator must have working client-side calculation logic, unique useful content, export const metadata, canonical/alternates metadata, accessible labels, responsive UI, breadcrumb/back-to-BizToolkit navigation, related-calculator internal links, and AdSense-ready top and bottom slots. The verified AdSense publisher ID is ${ADSENSE_PUBLISHER_ID}; use it only where the existing application architecture expects it and do not invent ad slot IDs. Do not add fake backlinks, paid-link schemes, or copied content. Update calculator-manifest.json status/count data as appropriate. Do not change authentication, secrets, Vercel credentials, repository settings, or unrelated projects. Keep all changes production-buildable. After implementation, run npm run lint, node scripts/check-calculator-contract.mjs, and npm run build; fix failures. Do not use external paid APIs or secret keys." --allow-tool='shell(git:*)' --allow-tool='shell(npm:*)' --allow-tool=write --no-ask-user
       - name: Verify generated changes
         run: |
           npm run lint
@@ -96,15 +108,15 @@ jobs:
           fi
           git commit -m "feat: expand calculator suite with AI automation"
           git push --set-upstream origin "$AI_BRANCH"
-      - name: Open pull request
+      - name: Open pull request and enable auto-merge
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr create \
-            --base main \
-            --head "$AI_BRANCH" \
-            --title "AI: expand calculator suite toward 50" \
-            --body "Automated calculator batch generated and verified by the BizToolkit AI workflow.\n\nChecks: lint, calculator contract, production build.\n\nHuman review is required before merge."
+          pr_url=$(gh pr create --base main --head "$AI_BRANCH" --title "AI: expand calculator suite toward 50" --body "Automated calculator batch generated and verified by the BizToolkit AI workflow.\n\nChecks: lint, calculator contract, production build.\n\nGitHub native auto-merge is requested when enabled; repository branch protection and required approvals remain authoritative.")
+          echo "Created $pr_url"
+          if [ "${{ inputs.enable_auto_merge }}" = "true" ]; then
+            gh pr merge "$pr_url" --auto --squash || echo 'Auto-merge could not be enabled; branch protection/approval policy remains authoritative.'
+          fi
 
   production-check:
     name: Production readiness check
@@ -122,6 +134,6 @@ jobs:
         shell: bash
         run: |
           echo 'SEO: calculator routes must expose metadata + canonical.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'AdSense: top/bottom slots are placeholders until the publisher ID is configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo "AdSense: publisher ${ADSENSE_PUBLISHER_ID} is configured at application level; individual ad slots must use valid AdSense slot IDs when required." >> "$GITHUB_STEP_SUMMARY"
           echo 'Backlinks: only legitimate internal/earned links; no artificial link schemes.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Deployment: merge to main is the production gate; Vercel Git integration can deploy main.' >> "$GITHUB_STEP_SUMMARY"
