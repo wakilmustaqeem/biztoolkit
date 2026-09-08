@@ -1,0 +1,46 @@
+name: Calculator Governance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "calculator-manifest.json"
+      - ".github/workflows/calculator-governance.yml"
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "calculator-manifest.json"
+      - ".github/workflows/calculator-governance.yml"
+
+jobs:
+  audit-calculators:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Audit standalone calculator pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=$(node -p "require('./calculator-manifest.json').target")
+          count=$(find app -mindepth 2 -maxdepth 2 -type f -path 'app/*-calculator/page.tsx' | wc -l | tr -d ' ')
+          echo "Standalone calculator pages: $count / $target"
+          if [ "$count" -lt "$target" ]; then
+            echo "Calculator target not reached. Need $((target-count)) more standalone calculator pages."
+            exit 1
+          fi
+
+      - name: Validate calculator page contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r file; do
+            if ! grep -q 'export const metadata' "$file"; then echo "Missing metadata: $file"; failed=1; fi
+            if ! grep -q 'canonical' "$file"; then echo "Missing canonical metadata: $file"; failed=1; fi
+          done < <(find app -mindepth 2 -maxdepth 2 -type f -path 'app/*-calculator/page.tsx' | sort)
+          if [ "$failed" -ne 0 ]; then exit 1; fi
+          echo "All standalone calculator pages satisfy the metadata contract."
