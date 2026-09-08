@@ -1,21 +1,20 @@
 import type { MetadataRoute } from "next";
+import calculatorManifest from "../calculator-manifest.json";
+
+const baseUrl = "https://biztoolkit-ashy.vercel.app";
+
+function calculatorRoutes(): string[] {
+  const baseline = calculatorManifest.baseline.map((slug) => `/${slug}`);
+  const batches = calculatorManifest.batches.map((item) => `/${item.slug}`);
+
+  return [...new Set([...baseline, ...batches])];
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://biztoolkit-ashy.vercel.app";
-
   const routes = [
     "",
     "/calculators",
-    "/profit-margin-calculator",
-    "/roi-calculator",
-    "/break-even-calculator",
-    "/markup-calculator",
-    "/discount-calculator",
-    "/commission-calculator",
-    "/vat-calculator",
-    "/cagr-calculator",
-    "/loan-payment-calculator",
-    "/hourly-rate-calculator",
+    ...calculatorRoutes(),
     "/about",
     "/disclaimer",
     "/privacy",
