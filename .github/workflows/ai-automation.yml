@@ -1,0 +1,55 @@
+name: AI Automation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '30 6 * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+  copilot-requests: write
+
+concurrency:
+  group: ai-automation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ai-review:
+    name: AI Review & Automation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install GitHub Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Run AI project audit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          copilot -p "Act as the BizToolkit AI automation reviewer. Inspect the current repository and recent Git history. Identify bugs, build risks, broken automation, security concerns, and useful next actions. Do not modify source code, workflows, settings, secrets, or Git history. Write a concise Markdown report to ai-report.md with sections: Status, Findings, Risks, Recommended Actions. If there is nothing critical, say so clearly." \
+            --allow-tool='shell(git:*)' \
+            --allow-tool=write \
+            --no-ask-user
+
+      - name: Publish AI report
+        run: |
+          if [ -f ai-report.md ]; then
+            cat ai-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'AI report was not generated.' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
