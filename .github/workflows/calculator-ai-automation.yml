@@ -1,0 +1,127 @@
+name: 50 Calculators AI Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      generate_missing:
+        description: 'Ask AI to generate missing calculator pages'
+        required: true
+        default: 'true'
+        type: boolean
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '15 6 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+  copilot-requests: write
+
+concurrency:
+  group: calculators-ai-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TARGET_CALCULATORS: 50
+
+jobs:
+  validate:
+    name: Validate 50-calculator contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Calculator contract
+        run: node scripts/check-calculator-contract.mjs
+      - name: Count production calculator routes
+        shell: bash
+        run: |
+          count=$(find app -mindepth 2 -maxdepth 2 -type f -path '*/page.tsx' -printf '%h\n' | grep '/calculator$' | wc -l || true)
+          echo "Production calculator routes: $count"
+          if [ "$count" -gt "$TARGET_CALCULATORS" ]; then
+            echo "Too many calculator routes: $count > $TARGET_CALCULATORS"
+            exit 1
+          fi
+
+  ai-build:
+    name: AI generate missing calculator pages
+    if: github.event_name == 'workflow_dispatch' && inputs.generate_missing == true
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install GitHub Copilot CLI
+        run: npm install -g @github/copilot
+      - name: Create AI implementation branch
+        shell: bash
+        run: |
+          branch="ai/calculators-${GITHUB_RUN_ID}"
+          git checkout -b "$branch"
+          echo "AI_BRANCH=$branch" >> "$GITHUB_ENV"
+      - name: AI implement missing calculators
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          copilot -p "Act as the BizToolkit calculator implementation agent. Work ONLY in this repository. The project contract is exactly 50 unique production calculator routes under app/*-calculator/page.tsx. Read calculator-manifest.json and scripts/check-calculator-contract.mjs first. Inspect existing calculator pages and preserve their architecture. Implement only missing calculators until the manifest target of 50 is satisfied. Every calculator must have: working client-side calculation logic, unique useful content, export const metadata, canonical/alternates metadata, accessible labels, responsive UI, breadcrumb/back-to-BizToolkit navigation, related-calculator internal links, and AdSense-ready top and bottom slots without inventing a publisher ID. Do not add fake backlinks, paid-link schemes, or copied content. Update calculator-manifest.json status/count data as appropriate. Do not change authentication, secrets, Vercel credentials, repository settings, or unrelated projects. Keep all changes production-buildable. After implementation, run npm run lint, node scripts/check-calculator-contract.mjs, and npm run build; fix failures. Do not use external paid APIs or secret keys." --allow-tool='shell(git:*)' --allow-tool='shell(npm:*)' --allow-tool=write --no-ask-user
+      - name: Verify generated changes
+        run: |
+          npm run lint
+          node scripts/check-calculator-contract.mjs
+          npm run build
+      - name: Commit and push AI batch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          if git diff --cached --quiet; then
+            echo 'No AI changes were generated.'
+            exit 0
+          fi
+          git commit -m "feat: expand calculator suite with AI automation"
+          git push --set-upstream origin "$AI_BRANCH"
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "$AI_BRANCH" \
+            --title "AI: expand calculator suite toward 50" \
+            --body "Automated calculator batch generated and verified by the BizToolkit AI workflow.\n\nChecks: lint, calculator contract, production build.\n\nHuman review is required before merge."
+
+  production-check:
+    name: Production readiness check
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: SEO/AdSense readiness summary
+        shell: bash
+        run: |
+          echo 'SEO: calculator routes must expose metadata + canonical.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'AdSense: top/bottom slots are placeholders until the publisher ID is configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Backlinks: only legitimate internal/earned links; no artificial link schemes.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Deployment: merge to main is the production gate; Vercel Git integration can deploy main.' >> "$GITHUB_STEP_SUMMARY"
