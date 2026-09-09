@@ -3,9 +3,11 @@ import calculatorManifest from "../calculator-manifest.json";
 
 const baseUrl = "https://biztoolkit-ashy.vercel.app";
 
+type CalculatorBatch = { slug: string };
+
 function calculatorRoutes(): string[] {
   const baseline = calculatorManifest.baseline.map((slug) => `/${slug}`);
-  const batches = calculatorManifest.batches.map((item) => `/${item.slug}`);
+  const batches = (calculatorManifest.batches as CalculatorBatch[]).map((item) => `/${item.slug}`);
 
   return [...new Set([...baseline, ...batches])];
 }
