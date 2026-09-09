@@ -38,8 +38,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+      - run: npm install
       - name: Lint
         run: npm run lint
       - name: Calculator contract
@@ -115,8 +114,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - name: SEO/AdSense readiness summary
         shell: bash
