@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 type Calc = { slug: string; title: string; description: string; fields: { key: string; label: string; defaultValue: number }[]; formula: (v: Record<string, number>) => number; suffix?: string };
@@ -53,13 +54,13 @@ export default function BusinessCalculator({ slug }: { slug: string }) {
   const result=useMemo(()=>c.formula(values),[c,values]);
   const related=Object.values(configs).filter(x=>x.slug!==slug).slice(0,6);
   return <main style={{maxWidth:800,margin:"0 auto",padding:"32px 20px",fontFamily:"system-ui",lineHeight:1.6}}>
-    <nav aria-label="Breadcrumb" style={{marginBottom:20}}><a href="/">BizToolkit</a> <span aria-hidden="true">›</span> <span>{c.title}</span></nav>
+    <nav aria-label="Breadcrumb" style={{marginBottom:20}}><Link href="/">BizToolkit</Link> <span aria-hidden="true">›</span> <span>{c.title}</span></nav>
     <div style={{minHeight:90,border:"1px dashed #bbb",borderRadius:10,display:"grid",placeItems:"center",marginBottom:24,fontSize:13,color:"#777"}} aria-label="Advertisement">Advertisement</div>
     <h1>{c.title}</h1><p>{c.description}</p>
     <section style={{display:"grid",gap:16,marginTop:28}}>{c.fields.map(f=><label key={f.key} style={{display:"grid",gap:7}}>{f.label}<input type="number" value={values[f.key]} onChange={e=>setValues({...values,[f.key]:Number(e.target.value)})} style={{padding:12,border:"1px solid #ccc",borderRadius:8,fontSize:16}} /></label>)}</section>
     <div style={{marginTop:28,padding:20,border:"1px solid #ddd",borderRadius:12}}><strong>Result</strong><div style={{fontSize:32,fontWeight:700,marginTop:8}}>{Number.isFinite(result)?result.toLocaleString(undefined,{maximumFractionDigits:2}):"—"}{c.suffix||""}</div></div>
     <div style={{minHeight:90,border:"1px dashed #bbb",borderRadius:10,display:"grid",placeItems:"center",margin:"28px 0",fontSize:13,color:"#777"}} aria-label="Advertisement">Advertisement</div>
-    <section aria-labelledby="related-calculators"><h2 id="related-calculators">Related Calculators</h2><div style={{display:"grid",gap:8}}>{related.map(x=><a key={x.slug} href={`/${x.slug}`}>{x.title}</a>)}</div></section>
-    <footer style={{marginTop:32,paddingTop:16,borderTop:"1px solid #eee"}}><a href="/">← Back to BizToolkit</a></footer>
+    <section aria-labelledby="related-calculators"><h2 id="related-calculators">Related Calculators</h2><div style={{display:"grid",gap:8}}>{related.map(x=><Link key={x.slug} href={`/${x.slug}`}>{x.title}</Link>)}</div></section>
+    <footer style={{marginTop:32,paddingTop:16,borderTop:"1px solid #eee"}}><Link href="/">← Back to BizToolkit</Link></footer>
   </main>;
 }
