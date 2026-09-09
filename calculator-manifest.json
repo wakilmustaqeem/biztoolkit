@@ -26,7 +26,17 @@
     "net-profit-calculator",
     "present-value-calculator",
     "revenue-calculator",
-    "savings-calculator"
+    "savings-calculator",
+    "break-even-units-calculator",
+    "cash-flow-calculator",
+    "customer-acquisition-cost-calculator",
+    "customer-lifetime-value-calculator",
+    "ebitda-calculator",
+    "markup-percentage-calculator",
+    "operating-margin-calculator",
+    "price-after-discount-calculator",
+    "roi-percentage-calculator",
+    "sales-growth-calculator"
   ],
   "batches": []
 }
