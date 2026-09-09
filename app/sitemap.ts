@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import calculatorManifest from "../calculator-manifest.json";
 
-const baseUrl = "https://biztoolkit-ashy.vercel.app";
+const baseUrl = "https://biztoolkit-wheat.vercel.app";
 
 type CalculatorBatch = { slug: string };
 
