@@ -13,9 +13,20 @@
     "vat-calculator",
     "cagr-calculator",
     "loan-payment-calculator",
-    "hourly-rate-calculator"
+    "hourly-rate-calculator",
+    "inflation-calculator",
+    "commission-rate-calculator",
+    "cost-per-unit-calculator",
+    "debt-to-income-calculator",
+    "future-value-calculator",
+    "gross-margin-calculator",
+    "gross-profit-calculator",
+    "mortgage-calculator",
+    "net-margin-calculator",
+    "net-profit-calculator",
+    "present-value-calculator",
+    "revenue-calculator",
+    "savings-calculator"
   ],
-  "batches": [
-    {"slug": "inflation-calculator", "status": "in-pr"}
-  ]
+  "batches": []
 }
