@@ -1,0 +1,1 @@
+Temporary CI note: business-calculator.tsx must import next/link and use <Link href="/"> for root navigation instead of <a href="/">. This is required by @next/next/no-html-link-for-pages.
